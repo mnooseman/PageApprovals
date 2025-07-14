@@ -8,6 +8,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use ProfessionalWiki\PageApprovals\Application\ApproverRepository;
 use ProfessionalWiki\PageApprovals\Application\PendingApproval;
 use ProfessionalWiki\PageApprovals\Application\PendingApprovalRetriever;
+use MediaWiki\Html\TemplateParser;
 
 class SpecialPendingApprovals extends SpecialPage {
 
@@ -49,7 +50,7 @@ class SpecialPendingApprovals extends SpecialPage {
 
 		$this->showSummary( $pendingApprovals );
 
-		$this->getOutput()->addHTML( $this->createPendingApprovalsTable( $pendingApprovals ) );
+		$this->renderPendingApprovalsTable( $pendingApprovals );
 	}
 
 	/**
@@ -62,56 +63,63 @@ class SpecialPendingApprovals extends SpecialPage {
 	/**
 	 * @param array<PendingApproval> $pendingApprovals
 	 */
-	private function createPendingApprovalsTable( array $pendingApprovals ): string {
-		return Html::rawElement(
-			'table',
-			[ 'class' => 'wikitable sortable' ],
-			$this->createHeaderRow() . $this->createPendingApprovalRows( $pendingApprovals )
+	private function renderPendingApprovalsTable( array $pendingApprovals ): void {
+		$templateParser = new TemplateParser( $this->getTemplateDirectory() );
+		
+		$html = $templateParser->processTemplate(
+			'PendingApprovals',
+			[
+				'pendingApprovals' => $this->pendingApprovalsToViewModel( $pendingApprovals ),
+				'headers' => $this->getTableHeaders()
+			]
 		);
+		
+		$this->getOutput()->addHTML( $html );
 	}
 
-	private function createHeaderRow(): string {
-		return <<<HTML
-<tr>
-	<th>{$this->msg( 'pageapprovals-pending-approvals-page' )->escaped()}</th>
-	<th>{$this->msg( 'pageapprovals-pending-approvals-categories' )->escaped()}</th>
-	<th class="headerSort headerSortDown">
-		{$this->msg('pageapprovals-pending-approvals-last-edit-time')->escaped()}
-	</th>
-	<th>{$this->msg( 'pageapprovals-pending-approvals-last-edit-by' )->escaped()}</th>
-</tr>
-HTML;
+	/**
+	 * Get the directory where templates are stored
+	 */
+	private function getTemplateDirectory(): string {
+		return __DIR__ . '/../../../templates';
+	}
+
+		/**
+	 * @return array<string, string>
+	 */
+	private function getTableHeaders(): array {
+		return [
+			'page' => $this->msg( 'pageapprovals-pending-approvals-page' )->escaped(),
+			'categories' => $this->msg( 'pageapprovals-pending-approvals-categories' )->escaped(),
+			'lastEditTime' => $this->msg( 'pageapprovals-pending-approvals-last-edit-time' )->escaped(),
+			'lastEditBy' => $this->msg( 'pageapprovals-pending-approvals-last-edit-by' )->escaped()
+		];
 	}
 
 	/**
 	 * @param array<PendingApproval> $pendingApprovals
+	 * @return array<array<string, mixed>>
 	 */
-	private function createPendingApprovalRows( array $pendingApprovals ): string {
-		return implode(
-			"\n",
-			array_map(
-				fn( PendingApproval $pendingApproval ) => $this->createPendingApprovalRow( $pendingApproval ),
-				$pendingApprovals
-			)
+	private function pendingApprovalsToViewModel( array $pendingApprovals ): array {
+		return array_map(
+			fn( PendingApproval $pendingApproval ) => $this->pendingApprovalToViewModel( $pendingApproval ),
+			$pendingApprovals
 		);
 	}
 
-	private function createPendingApprovalRow( PendingApproval $pendingApproval ): string {
-		$cells = implode(
-			"\n",
-			[
-				Html::rawElement( 'td', [], $this->linkRenderer->makeLink( $pendingApproval->title ) ),
-				Html::element( 'td', [], implode( ', ', $pendingApproval->categories ) ),
-				Html::element(
-					'td',
-					[ 'data-sort-value' => $pendingApproval->lastEditTimestamp ],
-					$this->getLanguage()->userTimeAndDate( $pendingApproval->lastEditTimestamp, $this->getUser() )
-				),
-				Html::element( 'td', [], $pendingApproval->lastEditUserName )
-			]
-		);
-
-		return "<tr>$cells</tr>";
+	/**
+	 * @return array<string, mixed>
+	 */
+	private function pendingApprovalToViewModel( PendingApproval $pendingApproval ): array {
+		return [
+			'pageLink' => $this->linkRenderer->makeLink( $pendingApproval->title ),
+			'categories' => implode( ', ', $pendingApproval->categories ),
+			'lastEditTimestamp' => $pendingApproval->lastEditTimestamp,
+			'lastEditTimeFormatted' => $this->getLanguage()->userTimeAndDate( 
+				$pendingApproval->lastEditTimestamp, 
+				$this->getUser() 
+			),
+			'lastEditUserName' => $pendingApproval->lastEditUserName
+		];
 	}
-
 }
