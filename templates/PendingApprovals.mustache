@@ -1,0 +1,16 @@
+<table class="wikitable sortable">
+	<tr>
+		<th>{{headers.page}}</th>
+		<th>{{headers.categories}}</th>
+		<th class="headerSort headerSortDown">{{headers.lastEditTime}}</th>
+		<th>{{headers.lastEditBy}}</th>
+	</tr>
+	{{#pendingApprovals}}
+	<tr>
+		<td>{{{pageLink}}}</td>
+		<td>{{categories}}</td>
+		<td data-sort-value="{{lastEditTimestamp}}">{{lastEditTimeFormatted}}</td>
+		<td>{{lastEditUserName}}</td>
+	</tr>
+	{{/pendingApprovals}}
+</table>
