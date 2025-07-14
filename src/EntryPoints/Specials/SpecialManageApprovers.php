@@ -8,7 +8,7 @@ use MediaWiki\User\UserFactory;
 use ProfessionalWiki\PageApprovals\Application\Approver;
 use ProfessionalWiki\PageApprovals\Application\ApproverRepository;
 use ProfessionalWiki\PageApprovals\Application\UseCases\GetApproversWithCategories;
-use LightnCandy\LightnCandy;
+use MediaWiki\Html\TemplateParser;
 
 class SpecialManageApprovers extends SpecialPage {
 
@@ -81,13 +81,21 @@ class SpecialManageApprovers extends SpecialPage {
 	 * @param array<Approver> $approversCategories
 	 */
 	private function renderHtml( array $approversCategories ): void {
-		$template = file_get_contents( __DIR__ . '/../../../templates/ManageApprovers.mustache' );
-		$compiledTemplate = LightnCandy::compile( $template, [ 'flags' => LightnCandy::FLAG_MUSTACHE ] );
-		$this->getOutput()->addHTML(
-			LightnCandy::prepare( $compiledTemplate )(
-				[ 'approvers' => $this->approversToViewModel( $approversCategories ) ]
-			)
+		$templateParser = new TemplateParser( $this->getTemplateDirectory() );
+		
+		$html = $templateParser->processTemplate(
+			'ManageApprovers',
+			[ 'approvers' => $this->approversToViewModel( $approversCategories ) ]
 		);
+		
+		$this->getOutput()->addHTML( $html );
+	}
+
+	/**
+	 * Get the directory where templates are stored
+	 */
+	private function getTemplateDirectory(): string {
+		return __DIR__ . '/../../../templates';
 	}
 
 	/**
