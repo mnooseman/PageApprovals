@@ -5,7 +5,7 @@
 				<cdx-field>
 					<cdx-text-input 
 						v-model="newUsername"
-						placeholder="Username"
+						:placeholder="msg('pageapprovals-username')"
 						required
 					/>
 				</cdx-field>
@@ -14,7 +14,7 @@
 					action="progressive"
 					class="add-approver-button"
 				>
-					Add Approver
+					{{ msg('pageapprovals-add-approver') }}
 				</cdx-button>
 			</form>
 		</div>
@@ -40,7 +40,7 @@
 								size="small"
 								class="approval-delete-btn"
 							>
-								Delete
+								{{ msg('pageapprovals-delete') }}
 							</cdx-button>
 						</form>
 					</div>
@@ -48,7 +48,7 @@
 						<cdx-field>
 							<cdx-text-input 
 								v-model="newCategories[row.username]"
-								:placeholder="'New Category'"
+								:placeholder="msg('pageapprovals-add-category')"
 								required
 							/>
 						</cdx-field>
@@ -57,7 +57,7 @@
 							size="small"
 							class="add-button"
 						>
-							Add
+							{{ msg('pageapprovals-add') }}
 						</cdx-button>
 					</form>
 				</div>
@@ -81,6 +81,10 @@ export default {
 		initialApprovers: {
 			type: Array,
 			default: () => []
+		},
+		csrfToken: {
+			type: String,
+			required: true
 		}
 	},
 	data() {
@@ -91,18 +95,21 @@ export default {
 			tableColumns: [
 				{
 					id: 'username',
-					label: 'User',
+					label: mw.msg('pageapprovals-username'),
 					textAlign: 'start'
 				},
 				{
 					id: 'categories',
-					label: 'Categories',
+					label: mw.msg('pageapprovals-categories'),
 					textAlign: 'start'
 				}
 			]
 		};
 	},
 	methods: {
+		msg(key) {
+			return mw.msg(key);
+		},
 		async addApprover() {
 			if (!this.newUsername.trim()) {
 				return;
@@ -112,6 +119,7 @@ export default {
 				const formData = new FormData();
 				formData.append('username', this.newUsername);
 				formData.append('action', 'add-approver');
+				formData.append('wpEditToken', this.csrfToken);
 
 				const response = await fetch(window.location.href, {
 					method: 'POST',
@@ -122,10 +130,12 @@ export default {
 					// Refresh the page data
 					await this.refreshApprovers();
 					this.newUsername = '';
+				} else {
+					mw.notify(mw.msg('pageapprovals-error-adding-approver'), { type: 'error' });
 				}
 			} catch (error) {
 				console.error('Error adding approver:', error);
-				mw.notify('Error adding approver', { type: 'error' });
+				mw.notify(mw.msg('pageapprovals-error-adding-approver'), { type: 'error' });
 			}
 		},
 
@@ -140,6 +150,7 @@ export default {
 				formData.append('username', username);
 				formData.append('category', category);
 				formData.append('action', 'add');
+				formData.append('wpEditToken', this.csrfToken);
 
 				const response = await fetch(window.location.href, {
 					method: 'POST',
@@ -152,11 +163,14 @@ export default {
 					if (approver) {
 						approver.categories.push(category);
 					}
-					this.$set(this.newCategories, username, '');
+					// Clear the input for this user
+					this.newCategories[username] = '';
+				} else {
+					mw.notify(mw.msg('pageapprovals-error-adding-category'), { type: 'error' });
 				}
 			} catch (error) {
 				console.error('Error adding category:', error);
-				mw.notify('Error adding category', { type: 'error' });
+				mw.notify(mw.msg('pageapprovals-error-adding-category'), { type: 'error' });
 			}
 		},
 
@@ -166,10 +180,12 @@ export default {
 				formData.append('username', username);
 				formData.append('category', category);
 				formData.append('action', 'delete');
+				formData.append('wpEditToken', this.csrfToken);
 
 				const response = await fetch(window.location.href, {
 					method: 'POST',
-					body: formData);
+					body: formData
+				});
 
 				if (response.ok) {
 					// Update local state
@@ -177,10 +193,12 @@ export default {
 					if (approver) {
 						approver.categories = approver.categories.filter(c => c !== category);
 					}
+				} else {
+					mw.notify(mw.msg('pageapprovals-error-deleting-category'), { type: 'error' });
 				}
 			} catch (error) {
 				console.error('Error deleting category:', error);
-				mw.notify('Error deleting category', { type: 'error' });
+				mw.notify(mw.msg('pageapprovals-error-deleting-category'), { type: 'error' });
 			}
 		},
 
@@ -200,9 +218,11 @@ export default {
 	},
 	mounted() {
 		// Initialize newCategories for all approvers
+		const initialCategories = {};
 		this.approvers.forEach(approver => {
-			this.$set(this.newCategories, approver.username, '');
+			initialCategories[approver.username] = '';
 		});
+		this.newCategories = initialCategories;
 
 		// Prevent back button issues
 		if (window.history.replaceState) {

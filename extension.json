@@ -116,6 +116,37 @@
 				"pageapprovals-unapproved"
 			]
 		},
+		"ext.pageApprovals.manageApprovers": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
+			"packageFiles": [
+				"ext.pageApprovals/manageApprovers/init.js",
+				"ext.pageApprovals/manageApprovers/components/ManageApproversApp.vue"
+			],
+			"codexComponents": [
+				"CdxButton",
+				"CdxTextInput",
+				"CdxField",
+				"CdxTable"
+			],
+			"dependencies": [
+				"vue",
+				"mediawiki.api",
+				"mediawiki.notification",
+				"mediawiki.util"
+			],
+			"messages": [
+				"manageapprovers",
+				"pageapprovals-add-approver",
+				"pageapprovals-username",
+				"pageapprovals-categories",
+				"pageapprovals-add-category",
+				"pageapprovals-delete",
+				"pageapprovals-add",
+				"pageapprovals-error-adding-approver",
+				"pageapprovals-error-adding-category",
+				"pageapprovals-error-deleting-category"
+			]
+		},
 		"ext.pageApprovals.manageApprovers.styles": {
 			"styles": [
 				"ManageApprovers.css"

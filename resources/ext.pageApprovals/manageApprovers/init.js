@@ -14,12 +14,14 @@ function init() {
 
 	// Get initial data from the mount point's data attributes
 	const initialData = {
-		approvers: JSON.parse(mountPoint.dataset.approvers || '[]')
+		approvers: JSON.parse(mountPoint.dataset.approvers || '[]'),
+		csrfToken: mw.user.tokens.get('csrfToken')
 	};
 
 	// Create and mount the Vue app
 	const app = createApp(ManageApproversApp, {
-		initialApprovers: initialData.approvers
+		initialApprovers: initialData.approvers,
+		csrfToken: initialData.csrfToken
 	});
 
 	app.mount(mountPoint);

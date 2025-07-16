@@ -30,5 +30,14 @@
 	"pageapprovals-no-categories": "You are not assigned as approver for any categories.",
 	"pageapprovals-no-pending-approvals": "You have no pending approvals.",
 	"pageapprovals-pending-approval-count": "You have $1 pending {{PLURAL:$1|approval|approvals}}.",
-	"pageapprovals-not-logged-in": "Log in to view your pending approvals."
+	"pageapprovals-not-logged-in": "Log in to view your pending approvals.",
+	"pageapprovals-add-approver": "Add Approver",
+	"pageapprovals-username": "Username",
+	"pageapprovals-categories": "Categories",
+	"pageapprovals-add-category": "Add Category",
+	"pageapprovals-delete": "Delete",
+	"pageapprovals-add": "Add",
+	"pageapprovals-error-adding-approver": "Error adding approver",
+	"pageapprovals-error-adding-category": "Error adding category",
+	"pageapprovals-error-deleting-category": "Error deleting category"
 }

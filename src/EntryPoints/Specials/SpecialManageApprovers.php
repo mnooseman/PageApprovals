@@ -2,13 +2,13 @@
 
 namespace ProfessionalWiki\PageApprovals\EntryPoints\Specials;
 
+use MediaWiki\Html\Html;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\UserFactory;
 use ProfessionalWiki\PageApprovals\Application\Approver;
 use ProfessionalWiki\PageApprovals\Application\ApproverRepository;
 use ProfessionalWiki\PageApprovals\Application\UseCases\GetApproversWithCategories;
-use MediaWiki\Html\TemplateParser;
 
 class SpecialManageApprovers extends SpecialPage {
 
@@ -43,6 +43,7 @@ class SpecialManageApprovers extends SpecialPage {
 		$this->renderHtml( $this->filterOutApproversWithNoCategories( $approversCategories ) );
 
 		$this->getOutput()->addModuleStyles( 'ext.pageApprovals.manageApprovers.styles' );
+		$this->getOutput()->addModules( 'ext.pageApprovals.manageApprovers' );
 	}
 
 	private function handlePostRequest( WebRequest $request ): void {
@@ -81,21 +82,15 @@ class SpecialManageApprovers extends SpecialPage {
 	 * @param array<Approver> $approversCategories
 	 */
 	private function renderHtml( array $approversCategories ): void {
-		$templateParser = new TemplateParser( $this->getTemplateDirectory() );
+		$approversData = $this->approversToViewModel( $approversCategories );
 		
-		$html = $templateParser->processTemplate(
-			'ManageApprovers',
-			[ 'approvers' => $this->approversToViewModel( $approversCategories ) ]
-		);
+		// Create Vue mount point with data
+		$html = Html::element( 'div', [
+			'id' => 'manage-approvers-app',
+			'data-approvers' => json_encode( $approversData )
+		] );
 		
 		$this->getOutput()->addHTML( $html );
-	}
-
-	/**
-	 * Get the directory where templates are stored
-	 */
-	private function getTemplateDirectory(): string {
-		return __DIR__ . '/../../../templates';
 	}
 
 	/**
