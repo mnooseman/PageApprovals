@@ -72,6 +72,19 @@
 					</form>
 				</div>
 			</template>
+			<template #item-actions="{ item, row }">
+				<div class="actions-cell">
+					<cdx-button 
+						action="destructive"
+						size="small"
+						class="remove-approver-btn"
+						:disabled="loadingStates[`remove-${row.username}`]"
+						@click="confirmRemoveApprover(row.username)"
+					>
+						{{ loadingStates[`remove-${row.username}`] ? msg('pageapprovals-loading') : msg('pageapprovals-remove-approver') }}
+					</cdx-button>
+				</div>
+			</template>
 		</cdx-table>
 	</div>
 </template>
@@ -134,6 +147,11 @@ module.exports = exports = {
 					id: 'categories',
 					label: mw.msg('pageapprovals-categories'),
 					textAlign: 'start'
+				},
+				{
+					id: 'actions',
+					label: mw.msg('pageapprovals-actions'),
+					textAlign: 'center'
 				}
 			]
 		};
@@ -369,6 +387,20 @@ module.exports = exports = {
 				// Use the new REST API to get fresh approvers data
 				const restClient = new mw.Rest();
 				const approvers = await restClient.get('/page-approvals/v0/approvers');
+				
+				// Get list of current usernames to clean up stale data
+				const currentUsernames = new Set((approvers || []).map(approver => approver.username));
+				
+				// Clean up reactive data for removed approvers
+				Object.keys(this.newCategoryInput).forEach(username => {
+					if (!currentUsernames.has(username)) {
+						delete this.newCategoryInput[username];
+						delete this.selectedCategories[username];
+						delete this.categorySuggestions[username];
+						delete this.inputChips[username];
+					}
+				});
+				
 				this.approvers = approvers || [];
 				
 				// Initialize category properties for any new approvers
@@ -384,6 +416,41 @@ module.exports = exports = {
 				console.error('Error refreshing approvers:', error);
 				// Fallback to page reload
 				window.location.reload();
+			}
+		},
+
+		confirmRemoveApprover(username) {
+			// Show confirmation dialog
+			const confirmed = confirm(
+				mw.msg('pageapprovals-confirm-remove-approver', username)
+			);
+			
+			if (confirmed) {
+				this.removeApprover(username);
+			}
+		},
+
+		async removeApprover(username) {
+			const loadingKey = `remove-${username}`;
+			this.loadingStates[loadingKey] = true;
+
+			try {
+				// Use REST API instead of form submission
+				const restClient = new mw.Rest();
+				await restClient.post('/page-approvals/v0/approvers', {
+					action: 'remove-approver',
+					username: username
+				});
+
+				// Refresh the approvers data from the server
+				await this.refreshApprovers();
+				
+				mw.notify(mw.msg('pageapprovals-approver-removed'), { type: 'success' });
+			} catch (error) {
+				console.error('Error removing approver:', error);
+				mw.notify(mw.msg('pageapprovals-error-removing-approver'), { type: 'error' });
+			} finally {
+				this.loadingStates[loadingKey] = false;
 			}
 		},
 

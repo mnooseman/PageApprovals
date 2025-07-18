@@ -49,6 +49,8 @@ class ManageApproverApi extends SimpleHandler {
 			case 'delete':
 				$category = $body['category'] ?? '';
 				return $this->deleteCategory( $userId, $category );
+			case 'remove-approver':
+				return $this->removeApprover( $userId );
 			default:
 				return $this->getResponseFactory()->createHttpError(
 					400,
@@ -88,6 +90,13 @@ class ManageApproverApi extends SimpleHandler {
 		);
 		
 		$this->approverRepository->setApproverCategories( $userId, array_values( $updatedCategories ) );
+
+		return $this->getResponseFactory()->createJson( [ 'success' => true ] );
+	}
+
+	private function removeApprover( int $userId ): Response {
+		// Completely remove the approver from the system
+		$this->approverRepository->removeApprover( $userId );
 
 		return $this->getResponseFactory()->createJson( [ 'success' => true ] );
 	}

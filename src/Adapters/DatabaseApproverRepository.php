@@ -77,6 +77,17 @@ class DatabaseApproverRepository implements ApproverRepository {
 	}
 
 	/**
+	 * Completely remove an approver from the system
+	 */
+	public function removeApprover( int $userId ): void {
+		$this->database->delete(
+			'approver_config',
+			[ 'ac_user_id' => $userId ],
+			__METHOD__
+		);
+	}
+
+	/**
 	 * @return string[]
 	 */
 	public function getAllCategories(): array {

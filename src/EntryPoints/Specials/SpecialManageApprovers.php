@@ -71,6 +71,10 @@ class SpecialManageApprovers extends SpecialPage {
 			case 'delete':
 				$currentCategories = array_filter( $currentCategories, fn( string $cat ) => $cat !== $category );
 				break;
+			case 'remove-approver':
+				// Completely remove the approver from the system
+				$this->approverRepository->removeApprover( $userId );
+				return;
 			default:
 				return;
 		}

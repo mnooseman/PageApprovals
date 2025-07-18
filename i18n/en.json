@@ -46,5 +46,9 @@
 	"pageapprovals-actions": "Actions",
 	"pageapprovals-api-error": "API request failed",
 	"pageapprovals-permission-denied": "Permission denied",
-	"pageapprovals-refresh-failed": "Failed to refresh data"
+	"pageapprovals-refresh-failed": "Failed to refresh data",
+	"pageapprovals-remove-approver": "Remove Approver",
+	"pageapprovals-confirm-remove-approver": "Are you sure you want to remove $1 as an approver? This will remove all their category assignments.",
+	"pageapprovals-approver-removed": "Approver removed successfully",
+	"pageapprovals-error-removing-approver": "Error removing approver"
 }

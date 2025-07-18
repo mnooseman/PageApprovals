@@ -26,4 +26,9 @@ interface ApproverRepository {
 	 */
 	public function setApproverCategories( int $userId, array $categoryNames ): void;
 
+	/**
+	 * Completely remove an approver from the system
+	 */
+	public function removeApprover( int $userId ): void;
+
 }

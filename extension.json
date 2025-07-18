@@ -150,7 +150,12 @@
 				"pageapprovals-error-deleting-category",
 				"pageapprovals-loading",
 				"pageapprovals-invalid-username",
-				"pageapprovals-invalid-category"
+				"pageapprovals-invalid-category",
+				"pageapprovals-actions",
+				"pageapprovals-remove-approver",
+				"pageapprovals-confirm-remove-approver",
+				"pageapprovals-approver-removed",
+				"pageapprovals-error-removing-approver"
 			]
 		},
 		"ext.pageApprovals.pendingApprovals": {

@@ -27,13 +27,19 @@ class GetApproversApi extends SimpleHandler {
 		$useCase = new GetApproversWithCategories( $this->approverRepository );
 		$approvers = $useCase->getApproversWithCategories();
 
-		// Filter out approvers with no categories (as done in the Special Page)
-		$filteredApprovers = array_filter(
-			$approvers,
-			fn( array $approver ) => $approver['categories'] !== []
+		// Convert Approver objects to arrays for JSON serialization
+		$approversData = array_map(
+			fn( \ProfessionalWiki\PageApprovals\Application\Approver $approver ) => [
+				'username' => $approver->username,
+				'userId' => $approver->userId,
+				'categories' => $approver->categories
+			],
+			$approvers
 		);
 
-		return $this->getResponseFactory()->createJson( array_values( $filteredApprovers ) );
+		// Return all approvers (including those with no categories) to match Special page behavior
+		// This allows users to manage approvers even if they currently have no categories assigned
+		return $this->getResponseFactory()->createJson( array_values( $approversData ) );
 	}
 
 }

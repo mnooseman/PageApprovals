@@ -44,4 +44,11 @@ class InMemoryApproverRepository implements ApproverRepository {
 		);
 	}
 
+	/**
+	 * Completely remove an approver from the system
+	 */
+	public function removeApprover( int $userId ): void {
+		unset( $this->categoriesPerUser[$userId] );
+	}
+
 }
