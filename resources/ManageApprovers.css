@@ -3,18 +3,29 @@
 		text-align: left;
 		max-width: 650px;
 		background-color: #f2f2f2;
+		padding: 16px;
+		border-radius: 4px;
+		margin-bottom: 20px;
 	}
 
-	input[ type='text' ] {
+	.add-approver-form {
+		display: flex;
+		gap: 12px;
+		align-items: flex-end;
+	}
+
+	/* Remove custom input styling to let Codex handle it */
+	/* input[ type='text' ] {
 		padding: 6px;
 		margin-right: 10px;
 		width: 150px;
 		height: 20px;
 		border: 0;
 		border-radius: 5px;
-	}
+	} */
 
-	button {
+	/* Remove custom button styling to let Codex handle it */
+	/* button {
 		padding: 6px 10px;
 		cursor: pointer;
 		background-color: #4caf50;
@@ -25,7 +36,7 @@
 
 	button:hover {
 		background-color: #45a049;
-	}
+	} */
 
 	table {
 		width: 100%;

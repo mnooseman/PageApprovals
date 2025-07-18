@@ -15,13 +15,15 @@ function init() {
 	// Get initial data from the mount point's data attributes
 	const initialData = {
 		pendingApprovals: JSON.parse(mountPoint.dataset.pendingApprovals || '[]'),
-		headers: JSON.parse(mountPoint.dataset.headers || '{}')
+		headers: JSON.parse(mountPoint.dataset.headers || '{}'),
+		csrfToken: mw.user.tokens.get('csrfToken')
 	};
 
 	// Create and mount the Vue app
 	const app = createApp(PendingApprovalsApp, {
 		initialPendingApprovals: initialData.pendingApprovals,
-		headers: initialData.headers
+		headers: initialData.headers,
+		csrfToken: initialData.csrfToken
 	});
 
 	app.mount(mountPoint);

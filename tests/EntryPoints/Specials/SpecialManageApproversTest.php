@@ -47,10 +47,16 @@ class SpecialManageApproversTest extends SpecialPageTestBase {
 	}
 
 	public function testAdminCanAccessPage(): void {
+		$output = $this->viewPage( user: $this->getTestSysop()->getUser() );
 		$this->assertStringContainsString(
-			'<table',
-			$this->viewPage( user: $this->getTestSysop()->getUser() ),
-			'Expected HTML output with table'
+			'id="manage-approvers-app"',
+			$output,
+			'Expected HTML output with Vue mount point'
+		);
+		$this->assertStringContainsString(
+			'data-approvers',
+			$output,
+			'Expected data-approvers attribute for Vue initialization'
 		);
 	}
 
@@ -85,7 +91,9 @@ class SpecialManageApproversTest extends SpecialPageTestBase {
 	}
 
 	public function testAddAndDeleteCategoryAction(): void {
-		$username = self::getTestUser()->getUser()->getName();
+		$testUser = self::getTestUser()->getUser();
+		$username = $testUser->getName();
+		$userId = $testUser->getId();
 
 		$this->post(
 			request: [
@@ -95,7 +103,9 @@ class SpecialManageApproversTest extends SpecialPageTestBase {
 			]
 		);
 
-		$this->assertStringContainsString( 'TestCategory', $this->viewPage(), 'Category should be added' );
+		// Check data was added to repository instead of HTML output
+		$categories = $this->approverRepository->getApproverCategories( $userId );
+		$this->assertContains( 'TestCategory', $categories, 'Category should be added' );
 
 		$this->post(
 			request: [
@@ -105,7 +115,9 @@ class SpecialManageApproversTest extends SpecialPageTestBase {
 			]
 		);
 
-		$this->assertStringNotContainsString( 'TestCategory', $this->viewPage(), 'Category should be deleted' );
+		// Check data was removed from repository
+		$categories = $this->approverRepository->getApproverCategories( $userId );
+		$this->assertNotContains( 'TestCategory', $categories, 'Category should be deleted' );
 	}
 
 	public function testCanAddAnotherCategoryWhenMultipleUsersHaveMultipleCategories(): void {

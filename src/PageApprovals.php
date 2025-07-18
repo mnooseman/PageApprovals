@@ -134,4 +134,24 @@ class PageApprovals {
 		);
 	}
 
+	public static function newGetApproversApi(): EntryPoints\REST\GetApproversApi {
+		return new EntryPoints\REST\GetApproversApi(
+			self::getInstance()->getApproverRepository()
+		);
+	}
+
+	public static function newManageApproverApi(): EntryPoints\REST\ManageApproverApi {
+		return new EntryPoints\REST\ManageApproverApi(
+			self::getInstance()->getApproverRepository(),
+			MediaWikiServices::getInstance()->getUserFactory()
+		);
+	}
+
+	public static function newGetPendingApprovalsApi(): EntryPoints\REST\GetPendingApprovalsApi {
+		return new EntryPoints\REST\GetPendingApprovalsApi(
+			self::getInstance()->newPendingApprovalRetriever(),
+			self::getInstance()->getApproverRepository()
+		);
+	}
+
 }

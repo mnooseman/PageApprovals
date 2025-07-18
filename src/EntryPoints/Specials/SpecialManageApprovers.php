@@ -42,7 +42,6 @@ class SpecialManageApprovers extends SpecialPage {
 
 		$this->renderHtml( $this->filterOutApproversWithNoCategories( $approversCategories ) );
 
-		$this->getOutput()->addModuleStyles( 'ext.pageApprovals.manageApprovers.styles' );
 		$this->getOutput()->addModules( 'ext.pageApprovals.manageApprovers' );
 	}
 
@@ -99,15 +98,11 @@ class SpecialManageApprovers extends SpecialPage {
 	 * @return array<Approver>
 	 */
 	private function filterOutApproversWithNoCategories( array $approvers ): array {
-		$request = $this->getRequest();
-		$user = $this->userFactory->newFromName( $request->getText( 'username' ) );
-
-		return array_filter( $approvers, static function ( Approver $approver ) use ( $request, $user ) {
-			if ( !empty( $approver->categories ) ) {
-				return true;
-			}
-			return $request->wasPosted() && $approver->username === $user->getName();
-		} );
+		// Show all approvers so they can be managed
+		// Previously this method filtered out approvers with no categories,
+		// but that created a catch-22 where you couldn't assign categories 
+		// to approvers you couldn't see
+		return $approvers;
 	}
 
 	/**

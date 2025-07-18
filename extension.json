@@ -122,11 +122,14 @@
 				"ext.pageApprovals/manageApprovers/init.js",
 				"ext.pageApprovals/manageApprovers/components/ManageApproversApp.vue"
 			],
+			"version": "2.0.1",
 			"codexComponents": [
 				"CdxButton",
-				"CdxTextInput",
+				"CdxTextInput", 
 				"CdxField",
-				"CdxTable"
+				"CdxTable",
+				"CdxLookup",
+				"CdxMultiselectLookup"
 			],
 			"dependencies": [
 				"vue",
@@ -144,12 +147,40 @@
 				"pageapprovals-add",
 				"pageapprovals-error-adding-approver",
 				"pageapprovals-error-adding-category",
-				"pageapprovals-error-deleting-category"
+				"pageapprovals-error-deleting-category",
+				"pageapprovals-loading",
+				"pageapprovals-invalid-username",
+				"pageapprovals-invalid-category"
 			]
 		},
-		"ext.pageApprovals.manageApprovers.styles": {
-			"styles": [
-				"ManageApprovers.css"
+		"ext.pageApprovals.pendingApprovals": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
+			"packageFiles": [
+				"ext.pageApprovals/pendingApprovals/init.js",
+				"ext.pageApprovals/pendingApprovals/components/PendingApprovalsApp.vue"
+			],
+			"codexComponents": [
+				"CdxTable",
+				"CdxButton"
+			],
+			"dependencies": [
+				"vue",
+				"mediawiki.api",
+				"mediawiki.notification",
+				"mediawiki.util"
+			],
+			"messages": [
+				"pendingapprovals",
+				"pageapprovals-pending-approvals-page",
+				"pageapprovals-pending-approvals-categories", 
+				"pageapprovals-pending-approvals-last-edit-time",
+				"pageapprovals-pending-approvals-last-edit-by",
+				"pageapprovals-no-pending-approvals",
+				"pageapprovals-loading",
+				"pageapprovals-actions",
+				"pageapprovals-approve-button",
+				"pageapprovals-approved",
+				"pageapprovals-approve-authorization-failed"
 			]
 		}
 	},
@@ -164,6 +195,21 @@
 			"path": "/page-approvals/v0/revision/{revisionId}/unapprove",
 			"method": [ "POST" ],
 			"factory": "ProfessionalWiki\\PageApprovals\\PageApprovals::newUnapprovePageApi"
+		},
+		{
+			"path": "/page-approvals/v0/approvers",
+			"method": [ "GET" ],
+			"factory": "ProfessionalWiki\\PageApprovals\\PageApprovals::newGetApproversApi"
+		},
+		{
+			"path": "/page-approvals/v0/approvers",
+			"method": [ "POST" ],
+			"factory": "ProfessionalWiki\\PageApprovals\\PageApprovals::newManageApproverApi"
+		},
+		{
+			"path": "/page-approvals/v0/pending-approvals",
+			"method": [ "GET" ],
+			"factory": "ProfessionalWiki\\PageApprovals\\PageApprovals::newGetPendingApprovalsApi"
 		}
 	],
 

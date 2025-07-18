@@ -51,6 +51,8 @@ class SpecialPendingApprovals extends SpecialPage {
 		$this->showSummary( $pendingApprovals );
 
 		$this->renderPendingApprovalsTable( $pendingApprovals );
+		
+		$this->getOutput()->addModules( 'ext.pageApprovals.pendingApprovals' );
 	}
 
 	/**
@@ -64,27 +66,20 @@ class SpecialPendingApprovals extends SpecialPage {
 	 * @param array<PendingApproval> $pendingApprovals
 	 */
 	private function renderPendingApprovalsTable( array $pendingApprovals ): void {
-		$templateParser = new TemplateParser( $this->getTemplateDirectory() );
+		$pendingApprovalsData = $this->pendingApprovalsToViewModel( $pendingApprovals );
+		$headers = $this->getTableHeaders();
 		
-		$html = $templateParser->processTemplate(
-			'PendingApprovals',
-			[
-				'pendingApprovals' => $this->pendingApprovalsToViewModel( $pendingApprovals ),
-				'headers' => $this->getTableHeaders()
-			]
-		);
+		// Create Vue mount point with data
+		$html = Html::element( 'div', [
+			'id' => 'pending-approvals-app',
+			'data-pending-approvals' => json_encode( $pendingApprovalsData ),
+			'data-headers' => json_encode( $headers )
+		] );
 		
 		$this->getOutput()->addHTML( $html );
 	}
 
 	/**
-	 * Get the directory where templates are stored
-	 */
-	private function getTemplateDirectory(): string {
-		return __DIR__ . '/../../../templates';
-	}
-
-		/**
 	 * @return array<string, string>
 	 */
 	private function getTableHeaders(): array {
@@ -112,6 +107,8 @@ class SpecialPendingApprovals extends SpecialPage {
 	 */
 	private function pendingApprovalToViewModel( PendingApproval $pendingApproval ): array {
 		return [
+			'pageId' => $pendingApproval->title->getArticleID(),
+			'pageTitle' => $pendingApproval->title->getPrefixedText(),
 			'pageLink' => $this->linkRenderer->makeLink( $pendingApproval->title ),
 			'categories' => implode( ', ', $pendingApproval->categories ),
 			'lastEditTimestamp' => $pendingApproval->lastEditTimestamp,

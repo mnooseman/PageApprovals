@@ -64,23 +64,33 @@ module.exports = defineComponent( {
 
 		// eslint-disable-next-line es-x/no-async-functions
 		async function onSelect( value ) {
-			if ( value === 'approve' ) {
-				await setPageApprovalStatus( true );
-				/**
-				 * FIXME: Replace with the timestamp returned by the API
-				 * The current timestamp is not the actual approval timestamp
-				 * The API should return a ISO 8601 timestamp instead of relative time
-				 */
-				approvalTimestamp.value = new Date().toISOString();
-				approver.value = mw.config.get( 'wgUserName' );
-				pageApproved.value = true;
-				mw.notify( mw.msg( 'pageapprovals-approved' ), { type: 'success' } );
-			} else if ( value === 'unapprove' ) {
-				await setPageApprovalStatus( false );
-				approvalTimestamp.value = null;
-				approver.value = null;
-				pageApproved.value = false;
-				mw.notify( mw.msg( 'pageapprovals-unapproved' ), { type: 'success' } );
+			try {
+				if ( value === 'approve' ) {
+					const response = await setPageApprovalStatus( true );
+					if ( response && response.approvalTimestamp ) {
+						// Use the actual approval timestamp from the API response
+						approvalTimestamp.value = response.approvalTimestamp;
+					} else {
+						// Fallback to current timestamp if API doesn't return one
+						approvalTimestamp.value = new Date().toISOString();
+					}
+					if ( response && response.approver ) {
+						approver.value = response.approver;
+					} else {
+						approver.value = mw.config.get( 'wgUserName' );
+					}
+					pageApproved.value = true;
+					mw.notify( mw.msg( 'pageapprovals-approved' ), { type: 'success' } );
+				} else if ( value === 'unapprove' ) {
+					const response = await setPageApprovalStatus( false );
+					approvalTimestamp.value = null;
+					approver.value = null;
+					pageApproved.value = false;
+					mw.notify( mw.msg( 'pageapprovals-unapproved' ), { type: 'success' } );
+				}
+			} catch ( error ) {
+				// Error notification is already handled in the API utility
+				mw.log.error( 'Approval operation failed:', error );
 			}
 		}
 

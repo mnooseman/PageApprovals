@@ -13,7 +13,18 @@ function setPageApprovalStatus( approve ) {
 		.then( ( data ) => data )
 		.catch( ( error, data ) => {
 			mw.log.error( `API request failed: ${ error }` );
-			mw.notify( data.xhr.responseJSON.message || `API request failed: ${ error }`, { type: 'error' } );
+			
+			// Safely extract error message
+			let errorMessage = `API request failed: ${ error }`;
+			
+			if ( data && data.xhr && data.xhr.responseJSON && data.xhr.responseJSON.message ) {
+				errorMessage = data.xhr.responseJSON.message;
+			} else if ( data && data.xhr && data.xhr.status ) {
+				errorMessage = `API request failed: HTTP ${ data.xhr.status }`;
+			}
+			
+			mw.notify( errorMessage, { type: 'error' } );
+			throw new Error( errorMessage );
 		} );
 }
 

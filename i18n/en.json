@@ -39,5 +39,12 @@
 	"pageapprovals-add": "Add",
 	"pageapprovals-error-adding-approver": "Error adding approver",
 	"pageapprovals-error-adding-category": "Error adding category",
-	"pageapprovals-error-deleting-category": "Error deleting category"
+	"pageapprovals-error-deleting-category": "Error deleting category",
+	"pageapprovals-loading": "Loading...",
+	"pageapprovals-invalid-username": "Invalid username",
+	"pageapprovals-invalid-category": "Invalid category name",
+	"pageapprovals-actions": "Actions",
+	"pageapprovals-api-error": "API request failed",
+	"pageapprovals-permission-denied": "Permission denied",
+	"pageapprovals-refresh-failed": "Failed to refresh data"
 }
