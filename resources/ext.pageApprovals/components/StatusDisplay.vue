@@ -1,20 +1,21 @@
+
 <template>
-	<template v-if="pageApproved">
+	<div>
 		<cdx-info-chip
+			v-if="pageApproved"
 			v-tooltip:left-start="tooltipText"
 			status="success"
 			@mouseenter="updateTooltip"
 		>
-			{{ $i18n( 'pageapprovals-status-approved' ) }}
+			{{ $i18n('pageapprovals-status-approved') }}
 		</cdx-info-chip>
-	</template>
-	<template v-else>
 		<cdx-info-chip
+			v-else
 			status="warning"
 		>
-			{{ $i18n( 'pageapprovals-status-not-approved' ) }}
+			{{ $i18n('pageapprovals-status-not-approved') }}
 		</cdx-info-chip>
-	</template>
+	</div>
 </template>
 
 <script>

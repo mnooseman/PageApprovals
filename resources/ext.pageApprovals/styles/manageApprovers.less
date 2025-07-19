@@ -1,0 +1,385 @@
+@import 'mediawiki.skin.variables.less';
+
+.ext-pageapprovals-manage-approvers {
+	max-width: 1200px;
+	margin: 0 auto;
+	
+	// Add Approver Section
+	&__add-section {
+		background: var( --background-color-neutral-subtle, @background-color-neutral-subtle );
+		border: @border-width-base @border-style-base var( --border-color-subtle, @border-color-subtle );
+		border-radius: @border-radius-base;
+		padding: @spacing-100;
+		margin-bottom: @spacing-100;
+		
+		&__title {
+			font-size: @font-size-large;
+			font-weight: @font-weight-bold;
+			color: var( --color-emphasized, @color-emphasized );
+			margin-bottom: @spacing-75;
+			border-bottom: @border-width-base @border-style-base var( --border-color-muted, @border-color-muted );
+			padding-bottom: @spacing-50;
+		}
+		
+		&__form {
+			display: flex;
+			gap: @spacing-75;
+			align-items: center;
+			
+			@media ( max-width: @max-width-breakpoint-mobile ) {
+				flex-direction: column;
+				align-items: stretch;
+				gap: @spacing-50;
+			}
+			
+			&__input-wrapper {
+				flex: 1;
+				min-width: 200px;
+			}
+			
+			&__button {
+				white-space: nowrap;
+				
+				@media ( max-width: @max-width-breakpoint-mobile ) {
+					align-self: flex-start;
+				}
+			}
+		}
+	}
+	
+	// Table Enhancements
+	&__table {
+		border: @border-width-base @border-style-base var( --border-color-subtle, @border-color-subtle );
+		border-radius: @border-radius-base;
+		overflow: hidden;
+		box-shadow: 0 0 0 1px @border-color-subtle;
+		
+		// Override default table styling
+		.cdx-table {
+			border: 0;
+			
+			th {
+				background: var( --background-color-neutral, @background-color-neutral );
+				color: var( --color-emphasized, @color-emphasized );
+				font-weight: @font-weight-bold;
+				border-bottom: @border-width-thick @border-style-base var( --border-color-muted, @border-color-muted );
+				padding: @spacing-75 @spacing-100;
+				vertical-align: middle;
+			}
+			
+			td {
+				padding: @spacing-75 @spacing-100;
+				border-bottom: @border-width-base @border-style-base var( --border-color-subtle, @border-color-subtle );
+				vertical-align: middle;
+			}
+			
+			tr:last-child td {
+				border-bottom: 0;
+			}
+			
+			tr:hover {
+				background: var( --background-color-interactive-subtle, @background-color-interactive-subtle );
+			}
+		}
+	}
+	
+	// Categories Column
+	&__categories-cell {
+		&__category-list {
+			margin-bottom: @spacing-50;
+		}
+		
+		&__category-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: var( --background-color-neutral-subtle, @background-color-neutral-subtle );
+			border: @border-width-base @border-style-base var( --border-color-muted, @border-color-muted );
+			border-radius: @border-radius-base;
+			padding: @spacing-50 @spacing-75;
+			margin-bottom: @spacing-50;
+			
+			&:last-child {
+				margin-bottom: 0;
+			}
+			
+			&__name {
+				font-weight: @font-weight-semi-bold;
+				color: var( --color-emphasized, @color-emphasized );
+				flex: 1;
+			}
+			
+			&__delete-form {
+				margin-left: @spacing-50;
+			}
+		}
+		
+		&__add-form {
+			display: flex;
+			gap: @spacing-50;
+			align-items: center;
+			margin-top: @spacing-50;
+			
+			@media ( max-width: @max-width-breakpoint-mobile ) {
+				flex-direction: column;
+				align-items: stretch;
+				gap: @spacing-50;
+			}
+			
+			&__input-wrapper {
+				flex: 1;
+			}
+			
+			&__button {
+				white-space: nowrap;
+				flex-shrink: 0;
+				
+				@media ( max-width: @max-width-breakpoint-mobile ) {
+					align-self: flex-start;
+				}
+			}
+		}
+		
+		&__empty-state {
+			color: var( --color-subtle, @color-subtle );
+			font-style: italic;
+			text-align: center;
+			padding: @spacing-100;
+		}
+	}
+	
+	// Actions Column
+	&__actions-cell {
+		text-align: center;
+		
+		@media ( max-width: @max-width-breakpoint-mobile ) {
+			text-align: left;
+		}
+	}
+	
+	// Empty State
+	&__empty-state {
+		text-align: center;
+		padding: @spacing-200;
+		color: var( --color-subtle, @color-subtle );
+		
+		&__icon {
+			font-size: @font-size-xx-large;
+			margin-bottom: @spacing-100;
+		}
+		
+		&__message {
+			font-size: @font-size-large;
+			margin-bottom: @spacing-50;
+		}
+		
+		&__hint {
+			font-size: @font-size-small;
+		}
+	}
+	
+	// Loading States
+	&__loading-overlay {
+		position: relative;
+		
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: var( --background-color-backdrop, rgba( 255, 255, 255, 0.8 ) );
+			border-radius: @border-radius-base;
+			z-index: 1;
+		}
+	}
+	
+	// Responsive Table Behavior
+	@media ( max-width: @max-width-breakpoint-tablet ) {
+		&__table {
+			.cdx-table {
+				th,
+				td {
+					padding: @spacing-50 @spacing-75;
+				}
+			}
+		}
+		
+		&__categories-cell {
+			&__category-item {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: @spacing-50;
+				
+				&__name {
+					margin-bottom: 0;
+				}
+				
+				&__delete-form {
+					margin-left: 0;
+					align-self: flex-end;
+				}
+			}
+		}
+	}
+	
+	@media ( max-width: @max-width-breakpoint-mobile ) {
+		padding: @spacing-50;
+		
+		&__add-section,
+		&__table {
+			margin-left: -@spacing-50;
+			margin-right: -@spacing-50;
+		}
+		
+		&__add-section {
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+		
+		&__table {
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+	}
+}
+
+	// Dark mode improvements for better border visibility
+.skin-theme-clientpref-night,
+.skin-theme-clientpref-os {
+	.ext-pageapprovals-manage-approvers {
+		// Enhance section container borders in dark mode
+		&__add-section {
+			border-color: var( --border-color-base, #a2a9b1 );
+			background: var( --background-color-neutral-subtle, rgba( 255, 255, 255, 0.05 ) );
+		}
+		
+		&__table {
+			border-color: var( --border-color-base, #a2a9b1 );
+			
+			.cdx-table {
+				th {
+					border-color: var( --border-color-base, #a2a9b1 );
+				}
+				
+				td {
+					border-color: var( --border-color-subtle, rgba( 255, 255, 255, 0.1 ) );
+				}
+			}
+		}
+		
+		// Enhance input field visibility in dark mode
+		.cdx-field .cdx-text-input__input,
+		.cdx-field .cdx-lookup__input,
+		.cdx-field .cdx-multiselect-lookup__input {
+			border-color: var( --border-color-input, rgba( 255, 255, 255, 0.3 ) ) !important;
+			
+			&:hover {
+				border-color: var( --border-color-input-hover, rgba( 255, 255, 255, 0.5 ) ) !important;
+			}
+		}
+	}
+}
+
+.ext-pageapprovals-manage-approvers {
+	// Categories Display (simplified for table)
+	&__categories-display {
+		&--empty {
+			color: var( --color-subtle, @color-subtle );
+			font-style: italic;
+		}
+		
+		&__list {
+			line-height: 1.4;
+		}
+		
+		&__item {
+			display: inline;
+		}
+	}
+	
+	// Inline Actions (following MediaWiki pattern)
+	&__actions {
+		display: flex;
+		gap: @spacing-50;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	// Dialog Content Styles (for Codex Dialog)
+	&__edit-dialog {
+		&__content {
+			padding: 0; // Let Codex Dialog handle padding
+		}
+		
+		&__categories {
+			margin-bottom: @spacing-150;
+			
+			&:last-child {
+				margin-bottom: 0;
+			}
+			
+			h4 {
+				margin: 0 0 @spacing-75 0;
+				font-size: @font-size-medium;
+				font-weight: @font-weight-bold;
+				color: var( --color-emphasized, @color-emphasized );
+			}
+		}
+		
+		&__category-chips {
+			margin-bottom: @spacing-100;
+		}
+		
+		&__add-category {
+			margin-top: @spacing-75;
+		}
+		
+		// Custom chip styling for MultiselectLookup - applied directly to chip elements
+		.cdx-input-chip.ext-pageapprovals-chip--existing {
+			background: var( --color-progressive, #0645ad ) !important;
+			border-color: var( --color-progressive, #0645ad ) !important;
+			color: var( --color-base--inverted, #ffffff ) !important;
+			opacity: 0.8;
+		}
+		
+		.cdx-input-chip.ext-pageapprovals-chip--new {
+			background: var( --color-success, #00af89 ) !important;
+			border-color: var( --color-success, #00af89 ) !important;
+			color: var( --color-base--inverted, #ffffff ) !important;
+		}
+	}
+}
+
+// Global chip styling targeting our specific dialog
+.cdx-dialog.ext-pageapprovals-manage-approvers__edit-dialog {
+	.cdx-input-chip.ext-pageapprovals-chip--existing {
+		background: var( --color-progressive, #0645ad ) !important;
+		border-color: var( --color-progressive, #0645ad ) !important;
+		color: var( --color-base--inverted, #ffffff ) !important;
+		opacity: 0.8;
+	}
+
+	.cdx-input-chip.ext-pageapprovals-chip--new {
+		background: var( --color-success, #00af89 ) !important;
+		border-color: var( --color-success, #00af89 ) !important;
+		color: var( --color-base--inverted, #ffffff ) !important;
+	}
+}
+
+// Global fallback chip styling 
+.cdx-input-chip.ext-pageapprovals-chip--existing {
+	background: var( --color-progressive, #0645ad ) !important;
+	border-color: var( --color-progressive, #0645ad ) !important;
+	color: var( --color-base--inverted, #ffffff ) !important;
+	opacity: 0.8;
+}
+
+.cdx-input-chip.ext-pageapprovals-chip--new {
+	background: var( --color-success, #00af89 ) !important;
+	border-color: var( --color-success, #00af89 ) !important;
+	color: var( --color-base--inverted, #ffffff ) !important;
+}

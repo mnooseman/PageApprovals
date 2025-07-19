@@ -120,7 +120,20 @@
 			"class": "MediaWiki\\ResourceLoader\\CodexModule",
 			"packageFiles": [
 				"ext.pageApprovals/manageApprovers/init.js",
-				"ext.pageApprovals/manageApprovers/components/ManageApproversApp.vue"
+				"ext.pageApprovals/manageApprovers/components/ManageApproversApp.vue",
+				{
+					"name": "ext.pageApprovals/manageApprovers/icons.json",
+					"callback": "MediaWiki\\ResourceLoader\\CodexModule::getIcons",
+					"callbackParam": [
+						"cdxIconEdit",
+						"cdxIconTrash",
+						"cdxIconClose",
+						"cdxIconUserGroup"
+					]
+				}
+			],
+			"styles": [
+				"ext.pageApprovals/styles/manageApprovers.less"
 			],
 			"version": "2.0.1",
 			"codexComponents": [
@@ -129,7 +142,9 @@
 				"CdxField",
 				"CdxTable",
 				"CdxLookup",
-				"CdxMultiselectLookup"
+				"CdxMultiselectLookup",
+				"CdxIcon",
+				"CdxDialog"
 			],
 			"dependencies": [
 				"vue",
@@ -155,7 +170,21 @@
 				"pageapprovals-remove-approver",
 				"pageapprovals-confirm-remove-approver",
 				"pageapprovals-approver-removed",
-				"pageapprovals-error-removing-approver"
+				"pageapprovals-error-removing-approver",
+				"pageapprovals-no-categories-assigned",
+				"pageapprovals-edit-categories",
+				"pageapprovals-close-edit-dialog",
+				"pageapprovals-edit-categories-for",
+				"pageapprovals-current-categories",
+				"pageapprovals-add-categories",
+				"pageapprovals-close",
+				"pageapprovals-search-add-category",
+				"pageapprovals-remove-category",
+				"pageapprovals-category-already-added",
+				"pageapprovals-save-changes",
+				"pageapprovals-saving",
+				"pageapprovals-categories-saved",
+				"pageapprovals-error-saving-categories"
 			]
 		},
 		"ext.pageApprovals.pendingApprovals": {

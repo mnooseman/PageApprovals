@@ -50,5 +50,19 @@
 	"pageapprovals-remove-approver": "Remove Approver",
 	"pageapprovals-confirm-remove-approver": "Are you sure you want to remove $1 as an approver? This will remove all their category assignments.",
 	"pageapprovals-approver-removed": "Approver removed successfully",
-	"pageapprovals-error-removing-approver": "Error removing approver"
+	"pageapprovals-error-removing-approver": "Error removing approver",
+	"pageapprovals-edit-categories": "Edit categories",
+	"pageapprovals-edit-categories-for": "Edit categories for $1",
+	"pageapprovals-current-categories": "Current categories",
+	"pageapprovals-add-categories": "Add categories",
+	"pageapprovals-close": "Close",
+	"pageapprovals-no-categories-assigned": "No categories assigned",
+	"pageapprovals-close-edit-dialog": "Close edit dialog",
+	"pageapprovals-search-add-category": "Search and add category",
+	"pageapprovals-remove-category": "Remove category $1",
+	"pageapprovals-category-already-added": "Category already added",
+	"pageapprovals-save-changes": "Save Changes",
+	"pageapprovals-saving": "Saving...",
+	"pageapprovals-categories-saved": "Categories saved successfully",
+	"pageapprovals-error-saving-categories": "Error saving categories"
 }
